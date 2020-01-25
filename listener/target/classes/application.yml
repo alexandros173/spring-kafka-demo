@@ -1,0 +1,9 @@
+spring:
+  kafka:
+    consumer:
+      auto-offset-reset: earliest
+      enable-auto-commit: false
+    producer:
+      value-serializer: org.apache.kafka.common.serialization.DoubleSerializer
+server:
+  port: 8089
