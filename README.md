@@ -1,42 +1,59 @@
-# spring-kafka-demo
 
-Event-Driven Architectures for Spring Developers
 
-Overview
+== spring-kafka-demo
+
+
+=== Event-Driven Architectures for Spring Developers
+
+==== Overview
 
 This repo contains 3 Spring Boot projects
 
-update-currency - A REST application for updating currency conversion rates: It uses Spring JPA and will auto-create the schema for the currency table; the application.properties are configured to use a database named cdc.
+- **update-currency** - A REST application for updating currency conversion rates:
+It uses Spring JPA and will auto-create the schema for the `currency` table; the `application.properties` are configured to use a database named `cdc`.
 
-listener - Receives change events from MySQL via Zendesk Maxwell and a Kafka topic maxwell and forwards currency changes to compacted topic currency. Deletions are forwarded as tombstone records.
+- **listener** - Receives change events from MySQL via Zendesk Maxwell and a Kafka topic `maxwell` and forwards currency changes to compacted topic `currency`.
+Deletions are forwarded as tombstone records.
 
-currencyreader - Receives currency events and stores them in a map for instant use within the application. Java and Kotlin versions are provided.
+- **currencyreader** - Receives currency events and stores them in a map for instant use within the application.
+Java and Kotlin versions are provided.
 
-Setup
+==== Setup
 
 Install MySQL and Maxwell (I used homebrew on Mac OS).
 
 I had some [authentication issues with MySQL 8, documented here](https://github.com/zendesk/maxwell/issues/1232).
 
-my.cnf
+.my.cnf
+```
 server_id=1
 log-bin=master
 binlog_format=row
 default-authentication-plugin=mysql_native_password
+```
+
+```
 CREATE USER 'maxwell'@'localhost' IDENTIFIED WITH 'mysql_native_password' AS 'maxwell';
-Running
+```
+
+==== Running
 
 Run maxwell
 
+```
 $ maxwell --user maxwell --password maxwell --producer=kafka --kafka.bootstrap.servers=localhost:9092 --kafka_topic=maxwell
+```
+
 Run all three boot applications and post a few currency updates:
 
+```
 $ curl -X POST http://localhost:8091/update/USD/1000
 
 $ curl -X POST http://localhost:8091/update/GBP/782
 
 $ curl -X POST http://localhost:8091/update/EUR/800
 
-$ curl -X POST http://localhost:8080/delete/EUR
+$ curl -X POST http://localhost:8091/delete/EUR
+```
 
-Observe the console of the read-currency application.
+Observe the console of the **read-currency** application.
