@@ -56,4 +56,4 @@ $ curl -X POST http://localhost:8091/update/EUR/800
 $ curl -X POST http://localhost:8091/delete/EUR
 ```
 
-Observe the console of the **read-currency** application.
+Observe the console of the **currencyreader** application.
